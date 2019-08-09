@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teamdeck notes</title>
+
+    <link href="app.css" rel="stylesheet" />
+
+    <script src="vendor/vue.min.js"></script>
+</head>
+<body>
+    <div class="container" id="root">
+        <p>{{check}}</p>
+
+        <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>
+
+        <div v-for="(value, name) in entries">
+            {{name}} : {{ value.length }}
+        </div>
+
+        <test-row k="10"></test-row>
+        <test-row k="20"></test-row>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
