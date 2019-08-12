@@ -3,6 +3,12 @@ body {
     background-color: #eee;
 }
 
-.container {
 
+.accordion.active .accordion-content {
+    display: block;
+}
+
+.entry-row {
+    display: flex;
+    justify-content: space-between;
 }

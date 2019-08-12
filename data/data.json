@@ -1,0 +1,22 @@
+{
+    "entries": {
+        "2019-08-06": [
+            {
+                "timeStart": "09:30:15",
+                "timeEnd": "10:30:15",
+                "description": "Project 1"
+            },
+            {
+                "timeStart": "13:30:13",
+                "timeEnd": "17:30:13",
+                "description": "@ Project"
+            }
+        ],
+        "2019-08-07": [
+            {
+                "timeStart": "09:30:15",
+                "description": "PS4"
+            }
+        ]
+    }
+}
