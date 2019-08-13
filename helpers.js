@@ -28,7 +28,7 @@ function saveData() {
   if (!data) return;
 
   try {
-    fs.writeFile("./data.json", JSON.stringify(data), function (err) {
+    fs.writeFile("./data/data.json", JSON.stringify(data), function (err) {
       if (err) console.log(err, "err");
     });
   } catch (err) {
@@ -39,13 +39,20 @@ function saveData() {
 function formatDate(date) {
   date = new Date(date);
 
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const m = `0${date.getMonth() + 1}`.substr(-2);
+  const d = `0${date.getDate()}`.substr(-2);
+
+  return `${date.getFullYear()}-${m}-${d}`;
 }
 
 function formatTime(date) {
   date = new Date(date);
 
-  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  const hours = `0${date.getHours()}`.substr(-2);
+  const minutes = `0${date.getMinutes()}`.substr(-2);
+  const seconds = `0${date.getSeconds()}`.substr(-2);
+
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 function timeDiff(timeStart, timeEnd) {

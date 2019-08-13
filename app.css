@@ -1,6 +1,6 @@
 body {
     padding: 10px;
-    background-color: #eee;
+    background-color: transparent;
 }
 
 
@@ -11,4 +11,17 @@ body {
 .entry-row {
     display: flex;
     justify-content: space-between;
+}
+
+/*New entry popup*/
+.new-entry-popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+}
+.new-entry-row {
+    display: flex;
 }

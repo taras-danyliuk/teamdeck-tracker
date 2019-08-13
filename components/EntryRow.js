@@ -1,4 +1,4 @@
-const { timeDiff } = require("../helpers")
+const { timeDiff } = require("../helpers");
 
 Vue.component('EntryRow', {
     props: ["data"],

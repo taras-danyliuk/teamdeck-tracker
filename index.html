@@ -12,13 +12,9 @@
 
 <body>
     <div class="container" id="root">
-        <p>{{check}}</p>
-
         <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>
 
-        <div v-for="(value, name) in entries">
-            {{name}} : {{ value.length }}
-        </div>
+        <new-entry-popup v-show="showNewEntryPopup" v-bind:done="addEntryDetails"></new-entry-popup>
     </div>
 
     <script src="app.js"></script>
