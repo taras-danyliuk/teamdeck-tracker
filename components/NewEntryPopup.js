@@ -1,16 +1,21 @@
+const { getProjects } = require("../helpers");
+
 Vue.component('NewEntryPopup', {
   props: ["done"],
   data: function() {
     return {
+      availableProjects: getProjects(),
       project: "",
       description: "",
     }
   },
   template: `
-      <div class="new-entry-popup">
+      <form class="new-entry-popup" v-on:submit="finish">
           <div class="new-entry-row">
               <p>Choose Project</p>
-              <input type="text" v-model="project"/>
+              <select v-model="project">
+                <option v-for="p in availableProjects" v-bind:value="p">{{p}}</option>
+              </select>
           </div>
           
           <div class="new-entry-row">
@@ -18,11 +23,13 @@ Vue.component('NewEntryPopup', {
               <input type="text" v-model="description"/>
           </div>
           
-          <button @click="finish">Done</button>
+          <button type="submit">Done</button>
       </div>
     `,
   methods: {
-    finish: function() {
+    finish: function(event) {
+      event.preventDefault();
+
       this.done({ project: this.project, description: this.description });
 
       this.project = "";

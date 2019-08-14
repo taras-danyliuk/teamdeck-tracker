@@ -12,7 +12,9 @@
 
 <body>
     <div class="container" id="root">
-        <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>
+        <p class="main-time">{{timeWorked}}</p>
+
+        <day-block v-bind:date="today" v-bind:entries="todaysEntries"></day-block>
 
         <new-entry-popup v-show="showNewEntryPopup" v-bind:done="addEntryDetails"></new-entry-popup>
     </div>

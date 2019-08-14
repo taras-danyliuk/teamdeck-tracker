@@ -1,6 +1,18 @@
-body {
-    padding: 10px;
+html, body {
     background-color: transparent;
+    height: 100%;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+}
+.main-time {
+    text-align: center;
+    font-size: 40px;
+    margin: 20px;
+    font-weight: bold;
 }
 
 
@@ -29,4 +41,8 @@ body {
 }
 .new-entry-row {
     display: flex;
+}
+
+option {
+    color: "#000";
 }

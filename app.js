@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const { getData, saveData, formatDate, formatTime } = require("./helpers");
+const { getData, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
@@ -27,8 +27,24 @@ document.addEventListener("DOMContentLoaded", function() {
       ...data,
       showNewEntryPopup: false,
       isTimerRunning: isTimerRunning,
+      today: formatDate(new Date()),
+      timeWorked: "00:00:00"
+    },
+    computed: {
+      todaysEntries: function() {
+        return this.entries[this.today] || [];
+      },
     },
     methods: {
+      totalTimeToday: function() {
+        let total = 0;
+
+        (this.entries[this.today] || []).forEach(entry => {
+            total += timeDiffInSeconds(entry.timeStart, entry.timeEnd);
+        });
+
+        return secondsToTime(total);
+      },
       startAndSave: function() {
         const today = formatDate(new Date());
         const todayEntries = vue.entries[today] || [];
@@ -67,7 +83,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         vue.showNewEntryPopup = false;
       }
-    }
+    },
+    mounted: function() {
+      this.timeWorked = this.totalTimeToday();
+      
+      this.interval = setInterval(function () {
+        this.timeWorked = this.totalTimeToday();
+      }.bind(this), 1000);         
+    },
+    beforeDestroy: function(){
+      clearInterval(this.interval);
+    }  
   });
 
 
