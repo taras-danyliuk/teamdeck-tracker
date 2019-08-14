@@ -1,18 +1,18 @@
+const { formatDate, timeDiffInSeconds, secondsToTime } = require("../helpers");
+
 Vue.component('DayBlock', {
     props: ["date", "entries"],
     data: function() {
         return {
-            isOpen: false,
+            isOpen: this.date === formatDate(new Date()),
         }
     },
     template: `
       <div v-on:click="isOpen = !isOpen" v-bind:class="{ active: isOpen, accordion: true}">
           <div class="accordion-item">
-              <p class="accordion-title">{{date}}</p>
+              <p class="accordion-title">{{date}} : {{totalTime}}</p>
   
               <div class="accordion-content">
-                  <p>Panel 1. Lorem ipsum dolor</p>
-
                   <entry-row v-for="entry in entries" v-bind:data="entry"></entry-row>
               </div>
           </div>
@@ -21,6 +21,17 @@ Vue.component('DayBlock', {
     methods: {
         toggleAccordion: function() {
             isOpen = !isOpen;
+        }
+    },
+    computed: {
+        totalTime: function() {
+            let total = 0;
+
+            this.entries.forEach(entry => {
+                total += timeDiffInSeconds(entry.timeStart, entry.timeEnd);
+            });
+
+            return secondsToTime(total)
         }
     }
 });

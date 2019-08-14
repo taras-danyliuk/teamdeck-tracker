@@ -1,19 +1,21 @@
 Vue.component('NewEntryPopup', {
   props: ["done"],
-  data: {
-    project: "",
-    description: "",
+  data: function() {
+    return {
+      project: "",
+      description: "",
+    }
   },
   template: `
       <div class="new-entry-popup">
           <div class="new-entry-row">
               <p>Choose Project</p>
-              <input type="text"/>
+              <input type="text" v-model="project"/>
           </div>
           
           <div class="new-entry-row">
               <p>Description</p>
-              <input type="text"/>
+              <input type="text" v-model="description"/>
           </div>
           
           <button @click="finish">Done</button>

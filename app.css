@@ -8,12 +8,17 @@ body {
     display: block;
 }
 
+
+/* Entry Row */
 .entry-row {
+    border: 1px solid #eee;
+}
+.entry-row-values {
     display: flex;
     justify-content: space-between;
 }
 
-/*New entry popup*/
+/* New Entry Popup */
 .new-entry-popup {
     position: absolute;
     top: 0;

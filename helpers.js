@@ -1,10 +1,21 @@
 const fs = require("fs");
+const storage = require("electron-json-storage-sync");
+
 
 function getData() {
   try {
-    const fileContent = fs.readFileSync("./data/data.json", "utf-8");
+    // const fileContent = fs.readFileSync("./data/data.json", "utf-8");
 
-    return JSON.parse(fileContent);
+    // return JSON.parse(fileContent);
+
+    let data = { entries: {}};
+
+    const fileContent = storage.get("teamdeck-data");
+    if (fileContent.status && fileContent.data && fileContent.data.entries) {
+      data = fileContent.data;
+    }
+
+    return data;
   } catch (err) {
     console.log("Error reading the file: " + JSON.stringify(err));
 
@@ -14,9 +25,14 @@ function getData() {
 
 function getProjects() {
   try {
-    const fileContent = fs.readFileSync("./data/projects.json", "utf-8");
+    // const fileContent = fs.readFileSync("./data/projects.json", "utf-8");
 
-    return JSON.parse(fileContent);
+    // return JSON.parse(fileContent);
+
+    const fileContent = storage.get("teamdeck-projects");
+    if (fileContent.status ) return fileContent.data;
+
+    return [];
   } catch (err) {
     console.log("Error reading the file: " + JSON.stringify(err));
 
@@ -28,11 +44,12 @@ function saveData() {
   if (!data) return;
 
   try {
-    fs.writeFile("./data/data.json", JSON.stringify(data), function (err) {
-      if (err) console.log(err, "err");
-    });
+    storage.set("teamdeck-data", data);
+    // fs.writeFile("./data/data.json", data, function (err) {
+    //   if (err) console.log(err, "err");
+    // });
   } catch (err) {
-    console.log("Error reading the file: " + JSON.stringify(err));
+    console.log("Error writing file the file: " + JSON.stringify(err));
   }
 }
 
@@ -72,11 +89,33 @@ function timeDiff(timeStart, timeEnd) {
   return `${hours}:${minutes}:${seconds}`
 }
 
+function timeDiffInSeconds(timeStart, timeEnd) {
+  if (!timeEnd) timeEnd = formatTime(new Date());
+
+  const timeStartArray = timeStart.split(":");
+  const timeStartInSeconds = (+timeStartArray[0] * 3600) + (+timeStartArray[1] * 60) + +timeStartArray[2];
+
+  const timeEndArray = timeEnd.split(":");
+  const timeEndInSeconds = (+timeEndArray[0] * 3600) + (+timeEndArray[1] * 60) + +timeEndArray[2];
+
+  return timeEndInSeconds - timeStartInSeconds;
+}
+
+function secondsToTime(seconds) {
+  const h = `0${Math.floor(seconds / 3600)}`.substr(-2);
+  const m = `0${Math.floor((seconds - (h * 3600)) / 60)}`.substr(-2);
+  const s = `0${seconds - (h * 3600) - (m * 60)}`.substr(-2);
+
+  return `${h}:${m}:${s}`
+}
+
 module.exports = {
   getData,
   getProjects,
   saveData,
   formatDate,
   formatTime,
-  timeDiff
+  timeDiff,
+  timeDiffInSeconds,
+  secondsToTime
 };
