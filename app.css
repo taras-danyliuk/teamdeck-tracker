@@ -10,7 +10,7 @@ html, body {
 }
 .main-time {
     text-align: center;
-    font-size: 40px;
+    font-size: 45px;
     margin: 20px;
     font-weight: bold;
 }
@@ -19,17 +19,33 @@ html, body {
     min-width: 300px;
     justify-content: space-between;
     padding: 10px 50px;
+    font-size: 20px;
 }
 
 
-.accordion.active .accordion-content {
-    display: block;
+.acc {
+    background-color: rgba(255,255,255,.5);
+    padding: 20px;
+}
+.acc-title {
+    margin: 0 0 0 20px;
+    font-weight: bold;
+}
+.acc-content {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255,255,255,.5);
+    width: 100%;
+}
+.acc.active .acc-content {
+    display: flex;
 }
 
 
 /* Entry Row */
 .entry-row {
-
+    width: 100%;
 }
 .entry-row-values {
     display: flex;

@@ -23,7 +23,8 @@
   "build": {
     "appId": "teamdeck-tracker",
     "mac": {
-      "category": "timetracking"
+      "category": "timetracking",
+      "icon": "./assets/AppIcon.icns"
     }
   }
 }

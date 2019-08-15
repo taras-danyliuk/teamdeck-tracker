@@ -5,15 +5,15 @@ Vue.component('EntryRow', {
     template: `
         <div class="entry-row">
             <p>
-                {{data.project || ""}}
+                <b>{{data.project || ""}}: </b>
                 <span>{{data.description || ""}}</span>
             </p>
         
             <div class="entry-row-values">
                 <div class="entry-row-time">
-                    <p>{{data.timeStart}}</p>
+                    <p><b>{{data.timeStart}}</b></p>
                     <p> - </p>
-                    <p>{{data.timeEnd || "--:--:--"}}</p>
+                    <p><b>{{data.timeEnd || "--:--:--"}}</b></p>
                 </div>
                 
                 <p>time spent: <b>{{time}}</b></p>

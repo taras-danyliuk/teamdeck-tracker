@@ -8,11 +8,11 @@ Vue.component('DayBlock', {
         }
     },
     template: `
-      <div v-on:click="isOpen = !isOpen" v-bind:class="{ active: isOpen, accordion: true}">
-          <div class="accordion-item">
-              <p class="accordion-title">{{date}} : {{totalTime}}</p>
+      <div v-on:click="isOpen = !isOpen" v-bind:class="{ active: isOpen, acc: true}">
+          <div class="acc-item">
+              <p class="acc-title">{{date}} : {{totalTime}}</p>
   
-              <div class="accordion-content">
+              <div class="acc-content">
                   <entry-row v-for="entry in entries" v-bind:data="entry"></entry-row>
               </div>
           </div>
