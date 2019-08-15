@@ -34,9 +34,8 @@ html, body {
 .acc-content {
     display: none;
     margin-top: 20px;
-    padding: 20px;
-    background-color: rgba(255,255,255,.5);
     width: 100%;
+    flex-direction: column;
 }
 .acc.active .acc-content {
     display: flex;
@@ -46,10 +45,16 @@ html, body {
 /* Entry Row */
 .entry-row {
     width: 100%;
+    margin: 5px 0;
+    background-color: rgba(255,255,255,.5);
+    padding: 20px;
 }
 .entry-row-values {
     display: flex;
     justify-content: space-between;
+}
+.entry-row-values p {
+    margin: 0;
 }
 .entry-row-time {
     display: flex;
