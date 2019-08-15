@@ -11,20 +11,22 @@ Vue.component('NewEntryPopup', {
   },
   template: `
       <form class="new-entry-popup" v-on:submit="finish">
-          <div class="new-entry-row">
-              <p>Choose Project</p>
-              <select v-model="project">
-                <option v-for="p in availableProjects" v-bind:value="p">{{p}}</option>
-              </select>
-          </div>
+        <div class="new-entry-popup-content">
+            <div class="new-entry-row">
+                <p class="new-entry-popup-label">Choose Project</p>
+                <select v-model="project" class="new-entry-popup-field">
+                    <option v-for="p in availableProjects" v-bind:value="p">{{p}}</option>
+                </select>
+            </div>
           
-          <div class="new-entry-row">
-              <p>Description</p>
-              <input type="text" v-model="description"/>
-          </div>
+            <div class="new-entry-row">
+                <p class="new-entry-popup-label">Description</p>
+                <input type="text" v-model="description" class="new-entry-popup-field"/>
+            </div>
           
-          <button type="submit">Done</button>
-      </div>
+            <button type="submit" class="button new-entry-popup-button">Done</button>
+        </div>
+      </form>
     `,
   methods: {
     finish: function(event) {

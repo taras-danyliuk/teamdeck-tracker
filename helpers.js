@@ -109,6 +109,12 @@ function secondsToTime(seconds) {
   return `${h}:${m}:${s}`
 }
 
+function timeToSeconds(time) {
+  const timeArray = time.split(":");
+
+  return (+timeArray[0] * 3600) + (+timeArray[1] * 60) + +timeArray[2];
+}
+
 module.exports = {
   getData,
   getProjects,
@@ -117,5 +123,6 @@ module.exports = {
   formatTime,
   timeDiff,
   timeDiffInSeconds,
-  secondsToTime
+  secondsToTime,
+  timeToSeconds
 };

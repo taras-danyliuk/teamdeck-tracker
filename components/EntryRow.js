@@ -10,9 +10,13 @@ Vue.component('EntryRow', {
             </p>
         
             <div class="entry-row-values">
-                <p>{{data.timeStart}}</p>
-                <p>{{data.timeEnd || "--:--:--"}}</p>
-                <p>{{time}}</p>
+                <div class="entry-row-time">
+                    <p>{{data.timeStart}}</p>
+                    <p> - </p>
+                    <p>{{data.timeEnd || "--:--:--"}}</p>
+                </div>
+                
+                <p>time spent: <b>{{time}}</b></p>
             </div>
         </div>
     `,

@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const { getData, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime } = require("./helpers");
+const { getData, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime, timeToSeconds } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
@@ -34,6 +34,24 @@ document.addEventListener("DOMContentLoaded", function() {
       todaysEntries: function() {
         return this.entries[this.today] || [];
       },
+      projectsSummary: function() {
+        const entries = this.entries[this.today] || [];
+        const result = {};
+
+        // Sum time per project
+        entries.forEach(entry => {
+          if (!(entry.project in result)) result[entry.project] = 0;
+
+          result[entry.project] += timeDiffInSeconds(entry.timeStart, entry.timeEnd)
+        });
+
+        // Format time
+        Object.keys(result).forEach(key => {
+          result[key] = secondsToTime(result[key]);
+        });
+
+        return result;
+      }
     },
     methods: {
       totalTimeToday: function() {
@@ -86,14 +104,14 @@ document.addEventListener("DOMContentLoaded", function() {
     },
     mounted: function() {
       this.timeWorked = this.totalTimeToday();
-      
+
       this.interval = setInterval(function () {
         this.timeWorked = this.totalTimeToday();
-      }.bind(this), 1000);         
+      }.bind(this), 1000);
     },
     beforeDestroy: function(){
       clearInterval(this.interval);
-    }  
+    }
   });
 
 

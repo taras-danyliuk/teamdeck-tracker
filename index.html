@@ -14,6 +14,11 @@
     <div class="container" id="root">
         <p class="main-time">{{timeWorked}}</p>
 
+        <div v-for="(value, key) in projectsSummary" class="project-summary">
+            <p>{{key}}</p>
+            <p>{{value}}</p>
+        </div>
+
         <day-block v-bind:date="today" v-bind:entries="todaysEntries"></day-block>
 
         <new-entry-popup v-show="showNewEntryPopup" v-bind:done="addEntryDetails"></new-entry-popup>

@@ -14,6 +14,12 @@ html, body {
     margin: 20px;
     font-weight: bold;
 }
+.project-summary {
+    display: flex;
+    min-width: 300px;
+    justify-content: space-between;
+    padding: 10px 50px;
+}
 
 
 .accordion.active .accordion-content {
@@ -23,12 +29,19 @@ html, body {
 
 /* Entry Row */
 .entry-row {
-    border: 1px solid #eee;
+
 }
 .entry-row-values {
     display: flex;
     justify-content: space-between;
 }
+.entry-row-time {
+    display: flex;
+    justify-content: space-between;
+    min-width: 200px;
+}
+
+
 
 /* New Entry Popup */
 .new-entry-popup {
@@ -38,11 +51,31 @@ html, body {
     bottom: 0;
     left: 0;
     background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.new-entry-popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 1px dashed #eee;
 }
 .new-entry-row {
     display: flex;
+    min-width: 500px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
 }
-
-option {
-    color: "#000";
+.new-entry-popup-label {
+    margin: 0;
+}
+.new-entry-popup-field {
+    max-width: 350px;
+    margin: 0;
+}
+.new-entry-popup-button {
+    margin: 20px 0 0;
 }

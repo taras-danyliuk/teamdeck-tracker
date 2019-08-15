@@ -18,8 +18,8 @@ let appOpened = false;
 
 /** Local Hotkeys */
 menu.append(new MenuItem({
-  label: 'Hide',
-  accelerator: 'Cmd+H',
+  label: "Hide",
+  accelerator: "Cmd+H",
   click: () => {
     appOpened = false;
     app.hide();
@@ -32,7 +32,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 600,
-    // fullscreen: true,
+    fullscreen: false,
     transparent: true,
     backgroundColor: '#aaffffff',
     webPreferences: {
@@ -74,19 +74,18 @@ app.on("ready", () => {
 
   globalShortcut.register('Ctrl+Option+Cmd+H', () => {
     if (appOpened) app.hide();
-    else app.show();
+    else {
+      app.show();
+      win.show();
+    }
 
     appOpened = !appOpened;
   });
-
-  console.log(app.getPath("userData"));
 });
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit()
-  }
+  if (process.platform !== "darwin") app.quit()
 });
 
 app.on('before-quit', () => willQuitApp = true);
