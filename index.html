@@ -19,7 +19,10 @@
             <p>{{value}}</p>
         </div>
 
-        <day-block v-bind:date="today" v-bind:entries="todaysEntries"></day-block>
+        <div class="days-breakdown">
+            <day-block v-bind:date="today" v-bind:entries="todaysEntries"></day-block>
+<!--            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>-->
+        </div>
 
         <new-entry-popup v-show="showNewEntryPopup" v-bind:done="addEntryDetails"></new-entry-popup>
     </div>
