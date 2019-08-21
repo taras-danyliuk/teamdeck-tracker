@@ -1,4 +1,23 @@
 const { app, BrowserWindow, globalShortcut, Menu, MenuItem } = require("electron");
+const storage = require("electron-json-storage-sync");
+
+
+function setup() {
+  try {
+    const resultProjects = storage.has("teamdeck-projects");
+    if (resultProjects.status && !resultProjects.data) {
+      storage.set("teamdeck-projects", ["COAX // ESTIMATION"]);
+    }
+
+    const resultDaysOff = storage.has("teamdeck-daysoff");
+    if (resultDaysOff.status && !resultDaysOff.data) {
+      storage.set("teamdeck-projects", ["2018-12-31"]);
+    }
+
+  } catch (err) {}
+}
+setup();
+
 
 const menu = new Menu();
 let win = null;
