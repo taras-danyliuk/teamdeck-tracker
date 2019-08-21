@@ -1,16 +1,6 @@
 const { app, BrowserWindow, globalShortcut, Menu, MenuItem } = require("electron");
-// const { menubar } = require('menubar');
-
-// const mb = menubar();
-
-// mb.on("ready", () => {
-//   console.log("app is ready");
-//   // your app code here
-// });
 
 const menu = new Menu();
-
-
 let win = null;
 let willQuitApp = false;
 let appOpened = false;
@@ -34,7 +24,7 @@ function createWindow() {
     height: 600,
     fullscreen: false,
     transparent: true,
-    backgroundColor: '#aaffffff',
+    backgroundColor: '#88ffffff',
     webPreferences: {
       nodeIntegration: true,
       devTools: false

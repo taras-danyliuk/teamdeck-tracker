@@ -12,11 +12,17 @@
 
 <body>
     <div class="container" id="root">
-        <p class="main-time">{{timeWorked}}</p>
+        <div class="header">
+            <p class="main-time">{{timeWorked}}</p>
+            <p class="additional-time">Залишилось сьогодні: {{timeLeft}}</p>
+        </div>
 
-        <div v-for="(value, key) in projectsSummary" class="project-summary">
-            <p>{{key}}</p>
-            <p>{{value}}</p>
+
+        <div class="project-summary-holder">
+            <div v-for="(value, key) in projectsSummary" class="project-summary">
+                <p class="project-summary-key">{{key}}</p>
+                <p class="project-summary-value">{{value}}</p>
+            </div>
         </div>
 
         <div class="days-breakdown">
@@ -25,6 +31,12 @@
         </div>
 
         <new-entry-popup v-show="showNewEntryPopup" v-bind:done="addEntryDetails"></new-entry-popup>
+
+        <!--Menu-->
+        <span class="settings-icon" @click="toggleMenu">∆</span>
+        <app-menu v-show="showMenu" v-bind:on-open-target="onOpenTarget" v-bind:on-close="toggleMenu"></app-menu>
+
+        <total-breakdown v-if="showTotalBreakdown" v-bind:on-close="closeTotalBreakdown"></total-breakdown>
     </div>
 
     <script src="app.js"></script>

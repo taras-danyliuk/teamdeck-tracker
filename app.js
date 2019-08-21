@@ -1,18 +1,24 @@
 const { ipcRenderer } = require('electron');
 
-const { getData, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime, timeToSeconds } = require("./helpers");
+const { getData, getDaysOff, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
 require("./components/EntryRow");
 require("./components/NewEntryPopup");
+require("./components/AppMenu");
+require("./components/TotalBreakdown");
+require("./components/ProgressBar");
 
 
 let data = null;
+let daysOff = [];
 
 document.addEventListener("DOMContentLoaded", function() {
   // Get data from local .json file
   data = getData();
+  daysOff = getDaysOff();
+
   const today = formatDate(new Date());
   const isTimerRunning = (
     data.entries[today] &&
@@ -26,9 +32,13 @@ document.addEventListener("DOMContentLoaded", function() {
     data: {
       ...data,
       showNewEntryPopup: false,
+      showMenu: false,
+      showTotalBreakdown: false,
+
       isTimerRunning: isTimerRunning,
       today: formatDate(new Date()),
-      timeWorked: "00:00:00"
+      timeWorked: "00:00:00",
+      timeLeft: "00:00:00",
     },
     computed: {
       todaysEntries: function() {
@@ -62,6 +72,19 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         return secondsToTime(total);
+      },
+      timeLeftToday: function() {
+        let total = 0;
+        Object.values(this.entries).forEach(value => {
+          value.forEach(entry => total += timeDiffInSeconds(entry.timeStart, entry.timeEnd));
+        });
+
+        const { start } = getMonthStartEndTotal();
+        const days = workingDaysBetweenDates(start, new Date(), daysOff);
+
+        const idealTime = days * 8 * 3600;
+
+        return secondsToTime(idealTime - total);
       },
       startAndSave: function() {
         const today = formatDate(new Date());
@@ -100,13 +123,27 @@ document.addEventListener("DOMContentLoaded", function() {
         targetEntry.description = data.description || "d1";
 
         vue.showNewEntryPopup = false;
+      },
+      onOpenTarget: function(target) {
+        if (target === "totalBreakdown") vue.showTotalBreakdown = true;
+      },
+      closeTotalBreakdown: function() {
+        vue.showTotalBreakdown = false;
+      },
+      toggleMenu: function() {
+        vue.showMenu = !vue.showMenu;
+      },
+      onCloseMenu: function() {
+        vue.showMenu = false;
       }
     },
     mounted: function() {
       this.timeWorked = this.totalTimeToday();
+      this.timeLeft = this.timeLeftToday();
 
       this.interval = setInterval(function () {
         this.timeWorked = this.totalTimeToday();
+        this.timeLeft = this.timeLeftToday();
       }.bind(this), 1000);
     },
     beforeDestroy: function(){

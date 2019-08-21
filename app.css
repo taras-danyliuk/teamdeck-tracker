@@ -7,20 +7,45 @@ html, body {
     flex-direction: column;
     max-height: 100%;
 }
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    flex-shrink: 0;
+}
 .main-time {
     text-align: center;
     font-size: 45px;
-    margin: 20px;
     font-weight: bold;
-    flex-shrink: 0;
+    margin: 0;
+}
+.additional-time {
+    font-size: 14px;
+    margin: 5px 0 0;
+}
+
+.project-summary-holder {
+    padding: 20px 50px
 }
 .project-summary {
     display: flex;
     min-width: 300px;
     justify-content: space-between;
-    padding: 10px 50px;
     font-size: 20px;
-    flex-shrink: 0
+    flex-shrink: 0;
+    padding: 10px 0;
+    border-bottom: 3px solid rgba(255,255,255,.1)
+}
+.project-summary:last-of-type {
+    border-bottom: none;
+}
+.project-summary-key {
+    margin: 0;
+}
+.project-summary-value {
+    margin: 0;
+    font-weight: bold;
 }
 .days-breakdown {
     overflow-y: auto;
@@ -53,6 +78,7 @@ html, body {
     margin: 5px 0;
     background-color: rgba(255,255,255,.5);
     padding: 20px;
+    border-radius: 8px;
 }
 .entry-row-values {
     display: flex;
@@ -104,4 +130,89 @@ html, body {
 }
 .new-entry-popup-button {
     margin: 20px 0 0;
+}
+
+
+.settings-icon {
+    position: absolute;
+    top: 5px;
+    right: 25px;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* Menu */
+.menu-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.menu-block {
+    background-color: #fff;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px 0 0 4px;
+    box-shadow: -5px 5px 5px 0 rgba(0,0,0,0.45);
+}
+.menu-row {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+
+/*Total Breakdown*/
+.total-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    background-color: #333333;
+    overflow-y: auto;
+}
+.total-header-text {
+    color: #accef7;
+    font-size: 16px;
+    margin: 10px 0 0;
+}
+
+
+/*Progress Bar*/
+.progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+.progress-text-holder {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.progress-text {
+    font-size: 13px;
+}
+.progress-background {
+    background-color: rgb(84, 92, 95);
+    width: 100%;
+    height: 25px;
+}
+.progress-foreground {
+    background-color: #84D2F6;
+    height: 25px;
 }
