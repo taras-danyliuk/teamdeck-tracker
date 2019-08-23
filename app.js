@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const { getData, getDaysOff, saveData, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
+const { getEntries, saveEntry, updateEntry, getDaysOff, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
@@ -16,7 +16,7 @@ let daysOff = [];
 
 document.addEventListener("DOMContentLoaded", function() {
   // Get data from local .json file
-  data = getData();
+  data = getEntries();
   daysOff = getDaysOff();
 
   const today = formatDate(new Date());
@@ -88,14 +88,11 @@ document.addEventListener("DOMContentLoaded", function() {
       },
       startAndSave: function() {
         const today = formatDate(new Date());
-        const todayEntries = vue.entries[today] || [];
 
-        // Get or create last entry
-        todayEntries.push({
-          timeStart: formatTime(new Date())
-        });
+        saveEntry(today, formatTime(new Date()));
+        const data = getEntries();
+        vue.entries = data.entries;
 
-        vue.entries[today] = todayEntries;
         vue.isTimerRunning = true;
         vue.showNewEntryPopup = true;
 
@@ -104,23 +101,27 @@ document.addEventListener("DOMContentLoaded", function() {
       stopAndSave: function() {
         const today = formatDate(new Date());
         const todayEntries = vue.entries[today];
-        const targetEntry = todayEntries.pop();
+        const targetEntry = todayEntries[todayEntries.length - 1];
 
-        targetEntry.timeEnd = formatTime(new Date());
+        updateEntry(targetEntry._id, { timeEnd: formatTime(new Date()) });
+        const data = getEntries();
+        vue.entries = data.entries;
 
-        todayEntries.push({ ...targetEntry });
-        vue.entries[today] = todayEntries;
         vue.isTimerRunning = false;
 
         new Notification('Teamdeck notes', { body: 'Stop timer' });
       },
-      addEntryDetails: function(data = {}) {
+      addEntryDetails: function(result = {}) {
         const today = formatDate(new Date());
         const todayEntries = vue.entries[today];
         const targetEntry = todayEntries[todayEntries.length - 1];
 
-        targetEntry.project = data.project || "p1";
-        targetEntry.description = data.description || "d1";
+        updateEntry(targetEntry._id, {
+          project: result.project || "Empty Project",
+          description: result.description || ""
+        });
+        const data = getEntries();
+        vue.entries = data.entries;
 
         vue.showNewEntryPopup = false;
       },
@@ -157,5 +158,3 @@ document.addEventListener("DOMContentLoaded", function() {
     else vue.startAndSave();
   })
 });
-
-window.addEventListener("beforeunload", saveData);

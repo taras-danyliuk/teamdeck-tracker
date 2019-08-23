@@ -31,14 +31,14 @@ let appOpened = false;
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1200,
+    width: 700,
     height: 600,
     fullscreen: false,
     transparent: true,
     backgroundColor: '#88ffffff',
     webPreferences: {
       nodeIntegration: true,
-      // devTools: false
+      devTools: false
     }
   });
 
@@ -139,5 +139,8 @@ client.connect(function(err) {
     event.returnValue = await entriesCollection.find({ user: arg.user }).toArray();
   });
 });
+
+
+
 
 

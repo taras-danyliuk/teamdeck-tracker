@@ -107,7 +107,7 @@ function getMonthStartEndTotal() {
   return { start, end, totalWorkingDays };
 }
 
-function getData() {
+function getEntries() {
   try {
     const entries = {};
     const bdEntries = ipcRenderer.sendSync("get-entries", { user: "taras.danylyuk@coaxsoft.com" });
@@ -119,6 +119,7 @@ function getData() {
       if (!(entry.date in entries)) entries[entry.date] = [];
       entries[entry.date].push(entry);
     });
+
 
     // Order keys by date
     const orderedEntriesKeys = Object.keys(entries).sort((a, b) => {
@@ -141,23 +142,28 @@ function getData() {
       resultEntries[key] = sortedEntries;
     });
 
-    console.log(resultEntries, "entries from db");
-
-    // entries[0].description = "Updated Description";
-    // console.log(entries[0])
-    // const result = ipcRenderer.sendSync("update-entry", entries[0]);
-    // console.log(result, "result of update");
-
-    // const result = ipcRenderer.sendSync("save-entry", { user: "taras.danylyuk@coaxsoft.com", timeStart: "10:00:00", project: "Project", description: "Description", timeEnd: "15:00:00" });
-    // console.log(result.insertedId.toHexString(), "saving result");
-
-
     return { entries: resultEntries };
   } catch (err) {
     console.log("Error reading the file: " + JSON.stringify(err));
 
-    return {}
+    return { entries: {}}
   }
+}
+
+function saveEntry(date, timeStart) {
+  ipcRenderer.sendSync("save-entry", {
+    user: "taras.danylyuk@coaxsoft.com",
+    date,
+    timeStart
+  });
+}
+
+function updateEntry(_id, dataToSet) {
+  ipcRenderer.sendSync("update-entry", {
+    user: "taras.danylyuk@coaxsoft.com",
+    _id,
+    ...dataToSet
+  });
 }
 
 function getProjects() {
@@ -186,21 +192,13 @@ function getDaysOff() {
   }
 }
 
-function saveData() {
-  if (!data) return;
-
-  // try {
-  //   storage.set("teamdeck-data", data);
-  // } catch (err) {
-  //   console.log("Error writing file the file: " + JSON.stringify(err));
-  // }
-}
 
 module.exports = {
-  getData,
+  getEntries,
+  saveEntry,
+  updateEntry,
   getProjects,
   getDaysOff,
-  saveData,
   formatDate,
   formatTime,
   timeDiff,
