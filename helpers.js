@@ -1,59 +1,7 @@
 const storage = require("electron-json-storage-sync");
 const moment = require("moment");
+const { ipcRenderer } = require('electron');
 
-
-function getData() {
-  try {
-    let data = { entries: {}};
-
-    const fileContent = storage.get("teamdeck-data");
-    if (fileContent.status && fileContent.data && fileContent.data.entries) {
-      data = fileContent.data;
-    }
-
-    return data;
-  } catch (err) {
-    console.log("Error reading the file: " + JSON.stringify(err));
-
-    return {}
-  }
-}
-
-function getProjects() {
-  try {
-    const fileContent = storage.get("teamdeck-projects");
-    if (fileContent.status ) return fileContent.data;
-
-    return [];
-  } catch (err) {
-    console.log("Error reading the file: " + JSON.stringify(err));
-
-    return []
-  }
-}
-
-function getDaysOff() {
-  try {
-    const fileContent = storage.get("teamdeck-daysoff");
-    if (fileContent.status ) return fileContent.data;
-
-    return [];
-  } catch (err) {
-    console.log("Error reading the file: " + JSON.stringify(err));
-
-    return []
-  }
-}
-
-function saveData() {
-  if (!data) return;
-
-  try {
-    storage.set("teamdeck-data", data);
-  } catch (err) {
-    console.log("Error writing file the file: " + JSON.stringify(err));
-  }
-}
 
 function formatDate(date) {
   date = new Date(date);
@@ -157,6 +105,95 @@ function getMonthStartEndTotal() {
   const totalWorkingDays = workingDaysBetweenDates(start, end, daysOff);
 
   return { start, end, totalWorkingDays };
+}
+
+function getData() {
+  try {
+    const entries = {};
+    const bdEntries = ipcRenderer.sendSync("get-entries", { user: "taras.danylyuk@coaxsoft.com" });
+
+    // Group based on date
+    bdEntries.forEach(entry => {
+      if (!entry.date) return;
+
+      if (!(entry.date in entries)) entries[entry.date] = [];
+      entries[entry.date].push(entry);
+    });
+
+    // Order keys by date
+    const orderedEntriesKeys = Object.keys(entries).sort((a, b) => {
+      if (new Date(a) > new Date(b)) return -1;
+      else if (new Date(a) < new Date(b)) return 1;
+
+      return 0;
+    });
+
+    // Order Entries by timeStart
+    const resultEntries = {};
+    orderedEntriesKeys.forEach(key => {
+      const sortedEntries = entries[key].sort((a, b) => {
+        if (timeToSeconds(a.timeStart) > timeToSeconds(b.timeStart)) return 1;
+        else if (timeToSeconds(a.timeStart) < timeToSeconds(b.timeStart)) return -1;
+
+        return 0;
+      });
+
+      resultEntries[key] = sortedEntries;
+    });
+
+    console.log(resultEntries, "entries from db");
+
+    // entries[0].description = "Updated Description";
+    // console.log(entries[0])
+    // const result = ipcRenderer.sendSync("update-entry", entries[0]);
+    // console.log(result, "result of update");
+
+    // const result = ipcRenderer.sendSync("save-entry", { user: "taras.danylyuk@coaxsoft.com", timeStart: "10:00:00", project: "Project", description: "Description", timeEnd: "15:00:00" });
+    // console.log(result.insertedId.toHexString(), "saving result");
+
+
+    return { entries: resultEntries };
+  } catch (err) {
+    console.log("Error reading the file: " + JSON.stringify(err));
+
+    return {}
+  }
+}
+
+function getProjects() {
+  try {
+    const fileContent = storage.get("teamdeck-projects");
+    if (fileContent.status ) return fileContent.data;
+
+    return [];
+  } catch (err) {
+    console.log("Error reading the file: " + JSON.stringify(err));
+
+    return []
+  }
+}
+
+function getDaysOff() {
+  try {
+    const fileContent = storage.get("teamdeck-daysoff");
+    if (fileContent.status ) return fileContent.data;
+
+    return [];
+  } catch (err) {
+    console.log("Error reading the file: " + JSON.stringify(err));
+
+    return []
+  }
+}
+
+function saveData() {
+  if (!data) return;
+
+  // try {
+  //   storage.set("teamdeck-data", data);
+  // } catch (err) {
+  //   console.log("Error writing file the file: " + JSON.stringify(err));
+  // }
 }
 
 module.exports = {

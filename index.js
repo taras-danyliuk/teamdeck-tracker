@@ -1,5 +1,8 @@
-const { app, BrowserWindow, globalShortcut, Menu, MenuItem } = require("electron");
+const { app, BrowserWindow, globalShortcut, Menu, MenuItem, ipcMain } = require("electron");
 const storage = require("electron-json-storage-sync");
+const MongoClient = require('mongodb').MongoClient;
+
+const env = require("./env");
 
 
 function setup() {
@@ -24,18 +27,7 @@ let win = null;
 let willQuitApp = false;
 let appOpened = false;
 
-
-/** Local Hotkeys */
-menu.append(new MenuItem({
-  label: "Hide",
-  accelerator: "Cmd+H",
-  click: () => {
-    appOpened = false;
-    app.hide();
-  }
-}));
-
-
+/** Electron Setup **/
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -61,6 +53,7 @@ function createWindow() {
   })
 }
 
+// Start Electron threads
 app.on("ready", () => {
   createWindow();
   appOpened = true;
@@ -92,9 +85,11 @@ app.on("ready", () => {
   });
 });
 
-// Quit when all windows are closed.
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit()
+  if (process.platform !== "darwin") {
+    client.close();
+    app.quit()
+  }
 });
 
 app.on('before-quit', () => willQuitApp = true);
@@ -105,3 +100,44 @@ app.on("activate", () => {
 
   appOpened = true;
 });
+
+
+/** Local Hotkeys */
+menu.append(new MenuItem({
+  label: "Hide",
+  accelerator: "Cmd+H",
+  click: () => {
+    appOpened = false;
+    app.hide();
+  }
+}));
+
+
+/** MongoDB Setup **/
+// Create a new MongoClient
+const client = new MongoClient(env.MONGO_URL, { useNewUrlParser: true });
+
+client.connect(function(err) {
+  if (err) return console.log("Error connection to DB", err);
+
+  const db = client.db("teamdeck");
+  const entriesCollection = db.collection("entries");
+  const projectsCollection = db.collection("projects");
+
+  // Listener for saving in DB
+  ipcMain.on("save-entry", async (event, arg) => {
+    event.returnValue = await entriesCollection.insertOne(arg);
+  });
+
+  // Listener for saving in DB
+  ipcMain.on("update-entry", async (event, arg) => {
+    event.returnValue = await entriesCollection.updateOne({ user: arg.user, _id: arg._id }, { $set: arg });
+  });
+
+  // Listener for getting all entries
+  ipcMain.on("get-entries", async (event, arg) => {
+    event.returnValue = await entriesCollection.find({ user: arg.user }).toArray();
+  });
+});
+
+
