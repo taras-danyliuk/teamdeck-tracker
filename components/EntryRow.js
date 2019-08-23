@@ -1,9 +1,9 @@
 const { timeDiff } = require("../helpers");
 
 Vue.component('EntryRow', {
-    props: ["data"],
+    props: ["data", "theme"],
     template: `
-        <div class="entry-row">
+        <div v-bind:class="{ 'entry-row': true, dark: theme === 'dark' }">
             <p>
                 <b>{{data.project || ""}}: </b>
                 <span>{{data.description || ""}}</span>

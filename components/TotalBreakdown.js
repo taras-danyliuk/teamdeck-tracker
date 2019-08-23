@@ -38,7 +38,7 @@ Vue.component("TotalBreakdown", {
             
       
         <div class="days-breakdown">
-            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>
+            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value" theme="dark"></day-block>
         </div>
       </div>
     `,

@@ -52,10 +52,15 @@ html, body {
 }
 
 
+/*Day Block*/
 .acc {
     background-color: rgba(255,255,255,.5);
     padding: 20px;
     margin: 5px 0;
+}
+.acc.dark {
+    background-color: rgba(0,0,0,.2);
+    color: #accef7;
 }
 .acc-title {
     margin: 0 0 0 20px;
@@ -72,6 +77,7 @@ html, body {
 }
 
 
+
 /* Entry Row */
 .entry-row {
     width: 100%;
@@ -79,6 +85,9 @@ html, body {
     background-color: rgba(255,255,255,.5);
     padding: 20px;
     border-radius: 8px;
+}
+.entry-row.dark {
+    background-color: rgba(0,0,0,.2);
 }
 .entry-row-values {
     display: flex;

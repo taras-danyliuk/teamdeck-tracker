@@ -39,14 +39,14 @@ menu.append(new MenuItem({
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 700,
+    width: 1200,
     height: 600,
     fullscreen: false,
     transparent: true,
     backgroundColor: '#88ffffff',
     webPreferences: {
       nodeIntegration: true,
-      devTools: false
+      // devTools: false
     }
   });
 

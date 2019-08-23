@@ -1,19 +1,19 @@
 const { formatDate, timeDiffInSeconds, secondsToTime } = require("../helpers");
 
 Vue.component('DayBlock', {
-    props: ["date", "entries"],
+    props: ["date", "entries", "theme"],
     data: function() {
         return {
             isOpen: this.date === formatDate(new Date()),
         }
     },
     template: `
-      <div v-on:click="isOpen = !isOpen" v-bind:class="{ active: isOpen, acc: true}">
+      <div v-on:click="isOpen = !isOpen" v-bind:class="{ active: isOpen, acc: true, dark: theme === 'dark'}">
           <div class="acc-item">
               <p class="acc-title">{{date}} : {{totalTime}}</p>
   
               <div class="acc-content">
-                  <entry-row v-for="entry in entries" v-bind:data="entry"></entry-row>
+                  <entry-row v-for="entry in entries" v-bind:data="entry" v-bind:theme="theme"></entry-row>
               </div>
           </div>
       </div>
