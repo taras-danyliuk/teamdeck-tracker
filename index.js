@@ -5,6 +5,25 @@ const MongoClient = require('mongodb').MongoClient;
 const env = require("./env");
 
 
+function getMonthStart() {
+  const now = new Date();
+  const start = new Date();
+
+  start.setDate(27);
+  if (now.getDate() <= 26) start.setMonth(now.getMonth() - 1);
+
+  return start;
+}
+
+function formatDate(date) {
+  date = new Date(date);
+
+  const m = `0${date.getMonth() + 1}`.substr(-2);
+  const d = `0${date.getDate()}`.substr(-2);
+
+  return `${date.getFullYear()}-${m}-${d}`;
+}
+
 function setup() {
   try {
     const resultProjects = storage.has("teamdeck-projects");
@@ -128,7 +147,9 @@ client.connect(function(err) {
 
   // Listener for getting all entries
   ipcMain.on("get-entries", async (event, arg) => {
-    event.returnValue = await entriesCollection.find({ user: arg.user }).toArray();
+    const startDate = getMonthStart();
+
+    event.returnValue = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
   });
 });
 

@@ -109,7 +109,6 @@ function getMonthStartEndTotal() {
 
 function getEntries() {
   try {
-    console.log("user", user)
     const entries = {};
     const bdEntries = ipcRenderer.sendSync("get-entries", { user: user.user });
 
