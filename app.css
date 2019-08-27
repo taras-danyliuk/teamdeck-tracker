@@ -92,6 +92,7 @@ html, body {
 .entry-row-values {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .entry-row-values p {
     margin: 0;
@@ -100,6 +101,19 @@ html, body {
     display: flex;
     justify-content: space-between;
     min-width: 200px;
+}
+.entry-row-header {
+    display: flex;
+    align-items: center;
+}
+.entry-row-description {
+    margin-left: 10px;
+}
+.entry-row-save {
+    background-color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 

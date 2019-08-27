@@ -1,4 +1,4 @@
-const { app, BrowserWindow, globalShortcut, Menu, MenuItem, ipcMain } = require("electron");
+const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
 const storage = require("electron-json-storage-sync");
 const MongoClient = require('mongodb').MongoClient;
 
@@ -21,8 +21,6 @@ function setup() {
 }
 setup();
 
-
-const menu = new Menu();
 let win = null;
 let willQuitApp = false;
 let appOpened = false;
@@ -100,17 +98,6 @@ app.on("activate", () => {
 
   appOpened = true;
 });
-
-
-/** Local Hotkeys */
-menu.append(new MenuItem({
-  label: "Hide",
-  accelerator: "Cmd+H",
-  click: () => {
-    appOpened = false;
-    app.hide();
-  }
-}));
 
 
 /** MongoDB Setup **/

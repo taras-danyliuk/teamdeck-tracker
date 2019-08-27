@@ -8,6 +8,7 @@
     <link href="app.css" rel="stylesheet" />
 
     <script src="vendor/vue.min.js"></script>
+    <script src="vendor/mousetrap.min.js"></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
         </div>
 
         <div class="days-breakdown">
-            <day-block v-bind:date="today" v-bind:entries="todaysEntries"></day-block>
+            <day-block v-bind:date="today" v-bind:entries="todaysEntries" v-bind:is-edit="isEdit" v-bind:save="save"></day-block>
 <!--            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value"></day-block>-->
         </div>
 
@@ -36,7 +37,7 @@
         <span class="settings-icon" @click="toggleMenu">∆</span>
         <app-menu v-show="showMenu" v-bind:on-open-target="onOpenTarget" v-bind:on-close="toggleMenu"></app-menu>
 
-        <total-breakdown v-if="showTotalBreakdown" v-bind:on-close="closeTotalBreakdown"></total-breakdown>
+        <total-breakdown v-if="showTotalBreakdown" v-bind:on-close="closeTotalBreakdown" v-bind:is-edit="isEdit" v-bind:save="save"></total-breakdown>
     </div>
 
     <script src="app.js"></script>

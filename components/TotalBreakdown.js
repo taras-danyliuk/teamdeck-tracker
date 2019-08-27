@@ -1,7 +1,7 @@
 const { timeDiffInSeconds, secondsToTime, getMonthStartEndTotal, workingDaysBetweenDates, daysText } = require("../helpers");
 
 Vue.component("TotalBreakdown", {
-  props: ["onClose"],
+  props: ["onClose", "isEdit", "save"],
   data: function() {
     const orderedKeys = Object.keys(data.entries).sort((a, b) => {
       if (new Date(a) > new Date(b)) return -1;
@@ -38,7 +38,7 @@ Vue.component("TotalBreakdown", {
             
       
         <div class="days-breakdown">
-            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value" theme="dark"></day-block>
+            <day-block v-for="(value, name) in entries" v-bind:date="name" v-bind:entries="value" theme="dark" v-bind:is-edit="isEdit" v-bind:save="save"></day-block>
         </div>
       </div>
     `,

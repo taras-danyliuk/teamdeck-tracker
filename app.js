@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const { getEntries, saveEntry, updateEntry, getDaysOff, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
+const { getEntries, saveEntry, updateEntry, getDaysOff, getProjects, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
@@ -13,11 +13,13 @@ require("./components/ProgressBar");
 
 let data = null;
 let daysOff = [];
+let availableProjects = [];
 
 document.addEventListener("DOMContentLoaded", function() {
   // Get data from local .json file
   data = getEntries();
   daysOff = getDaysOff();
+  availableProjects = getProjects();
 
   const today = formatDate(new Date());
   const isTimerRunning = (
@@ -34,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
       showNewEntryPopup: false,
       showMenu: false,
       showTotalBreakdown: false,
+      isEdit: false,
 
       isTimerRunning: isTimerRunning,
       today: formatDate(new Date()),
@@ -125,6 +128,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         vue.showNewEntryPopup = false;
       },
+      save: function(targetEntryId, result) {
+        updateEntry(targetEntryId, result);
+        const data = getEntries();
+        vue.entries = data.entries;
+        vue.isEdit = false;
+      },
       onOpenTarget: function(target) {
         if (target === "totalBreakdown") vue.showTotalBreakdown = true;
       },
@@ -156,5 +165,12 @@ document.addEventListener("DOMContentLoaded", function() {
   ipcRenderer.on("hotkey", () => {
     if (vue.isTimerRunning) vue.stopAndSave();
     else vue.startAndSave();
-  })
+  });
+
+  // Local Shortcuts
+  Mousetrap.bind(["command+shift+e"], function() {
+    vue.isEdit = !vue.isEdit;
+
+    return false;
+  });
 });

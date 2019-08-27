@@ -1,10 +1,9 @@
-const { getProjects } = require("../helpers");
 
 Vue.component('NewEntryPopup', {
   props: ["done"],
   data: function() {
     return {
-      availableProjects: getProjects(),
+      availableProjects: availableProjects,
       project: "",
       description: "",
     }
