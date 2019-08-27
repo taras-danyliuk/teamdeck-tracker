@@ -109,8 +109,9 @@ function getMonthStartEndTotal() {
 
 function getEntries() {
   try {
+    console.log("user", user)
     const entries = {};
-    const bdEntries = ipcRenderer.sendSync("get-entries", { user: "taras.danylyuk@coaxsoft.com" });
+    const bdEntries = ipcRenderer.sendSync("get-entries", { user: user.user });
 
     // Group based on date
     bdEntries.forEach(entry => {
@@ -152,7 +153,7 @@ function getEntries() {
 
 function saveEntry(date, timeStart) {
   ipcRenderer.sendSync("save-entry", {
-    user: "taras.danylyuk@coaxsoft.com",
+    user: user.user,
     date,
     timeStart
   });
@@ -160,7 +161,7 @@ function saveEntry(date, timeStart) {
 
 function updateEntry(_id, dataToSet) {
   ipcRenderer.sendSync("update-entry", {
-    user: "taras.danylyuk@coaxsoft.com",
+    user: user.user,
     _id,
     ...dataToSet
   });
@@ -192,6 +193,19 @@ function getDaysOff() {
   }
 }
 
+function getUser() {
+  try {
+    const fileContent = storage.get("teamdeck-user");
+    if (fileContent.status ) return fileContent.data;
+
+    return { user: "default@coaxsoft.com" };
+  } catch (err) {
+    console.log("Error reading the file: " + JSON.stringify(err));
+
+    return { user: "default@coaxsoft.com" };
+  }
+}
+
 
 module.exports = {
   getEntries,
@@ -199,6 +213,7 @@ module.exports = {
   updateEntry,
   getProjects,
   getDaysOff,
+  getUser,
   formatDate,
   formatTime,
   timeDiff,

@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const { getEntries, saveEntry, updateEntry, getDaysOff, getProjects, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
+const { getEntries, saveEntry, updateEntry, getDaysOff, getProjects, getUser, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
 
 // Components
 require("./components/DayBlock");
@@ -11,12 +11,14 @@ require("./components/TotalBreakdown");
 require("./components/ProgressBar");
 
 
+let user = "default@coaxsoft.com";
 let data = null;
 let daysOff = [];
 let availableProjects = [];
 
 document.addEventListener("DOMContentLoaded", function() {
   // Get data from local .json file
+  user = getUser();
   data = getEntries();
   daysOff = getDaysOff();
   availableProjects = getProjects();

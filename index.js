@@ -17,6 +17,11 @@ function setup() {
       storage.set("teamdeck-projects", ["2018-12-31"]);
     }
 
+    const resultUser = storage.has("teamdeck-user");
+    if (resultUser.status && !resultUser.data) {
+      storage.set("teamdeck-user", { user: "default@coaxsoft.com" });
+    }
+
   } catch (err) {}
 }
 setup();
