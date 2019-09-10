@@ -33,7 +33,7 @@ function setup() {
 
     const resultDaysOff = storage.has("teamdeck-daysoff");
     if (resultDaysOff.status && !resultDaysOff.data) {
-      storage.set("teamdeck-projects", ["2018-12-31"]);
+      storage.set("teamdeck-daysoff", ["2018-12-31"]);
     }
 
     const resultUser = storage.has("teamdeck-user");
@@ -149,7 +149,9 @@ client.connect(function(err) {
   ipcMain.on("get-entries", async (event, arg) => {
     const startDate = getMonthStart();
 
-    event.returnValue = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
+    const result = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
+
+    event.returnValue = result;
   });
 });
 
