@@ -6,9 +6,6 @@
 
     <link href="vendor/foundation.min.css" rel="stylesheet" />
     <link href="app.css" rel="stylesheet" />
-
-    <script src="vendor/vue.min.js"></script>
-    <script src="vendor/mousetrap.min.js"></script>
 </head>
 
 <body>
@@ -40,6 +37,8 @@
         <total-breakdown v-if="showTotalBreakdown" v-bind:on-close="closeTotalBreakdown" v-bind:is-edit="isEdit" v-bind:save="save"></total-breakdown>
     </div>
 
+    <script src="vendor/vue.min.js"></script>
+    <script src="vendor/mousetrap.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

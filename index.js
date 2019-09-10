@@ -67,7 +67,7 @@ function createWindow() {
   // and load the index.html of the app.
   win.loadFile("index.html");
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on("closed", () => {
@@ -126,7 +126,7 @@ app.on("activate", () => {
 
 /** MongoDB Setup **/
 // Create a new MongoClient
-const client = new MongoClient(env.MONGO_URL, { useNewUrlParser: true });
+const client = new MongoClient(env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 client.connect(function(err) {
   if (err) return console.log("Error connection to DB", err);
@@ -149,9 +149,7 @@ client.connect(function(err) {
   ipcMain.on("get-entries", async (event, arg) => {
     const startDate = getMonthStart();
 
-    const result = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
-
-    event.returnValue = result;
+    event.returnValue = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
   });
 });
 
