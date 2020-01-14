@@ -1,6 +1,9 @@
 const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
 const storage = require("electron-json-storage-sync");
 const MongoClient = require('mongodb').MongoClient;
+const path = require('path');
+const log = require('electron-log');
+
 
 const env = require("./env");
 
@@ -33,14 +36,13 @@ function setup() {
 
     const resultDaysOff = storage.has("teamdeck-daysoff");
     if (resultDaysOff.status && !resultDaysOff.data) {
-      storage.set("teamdeck-projects", ["2018-12-31"]);
+      storage.set("teamdeck-daysoff", ["2018-12-31"]);
     }
 
     const resultUser = storage.has("teamdeck-user");
     if (resultUser.status && !resultUser.data) {
       storage.set("teamdeck-user", { user: "default@coaxsoft.com" });
     }
-
   } catch (err) {}
 }
 setup();
@@ -48,6 +50,7 @@ setup();
 let win = null;
 let willQuitApp = false;
 let appOpened = false;
+let client = null;
 
 /** Electron Setup **/
 function createWindow() {
@@ -65,20 +68,12 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  win.loadFile("index.html");
+  win.loadFile(path.join(__dirname, 'index.html'));
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
-  win.on("closed", () => {
-    win = null
-  })
-}
-
-// Start Electron threads
-app.on("ready", () => {
-  createWindow();
-  appOpened = true;
+  win.on("closed", () => win = null);
 
   win.on('close', (e) => {
     if (willQuitApp) window = null;
@@ -88,6 +83,43 @@ app.on("ready", () => {
       appOpened = false;
     }
   });
+}
+
+// Start Electron threads
+app.on("ready", () => {
+  /** MongoDB Setup **/
+  client = new MongoClient(env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+  client.connect(function(err) {
+    if (err) return console.log("Error connection to DB", err);
+
+    // Create Electron Window
+    createWindow();
+    appOpened = true;
+
+    const db = client.db("teamdeck");
+    const entriesCollection = db.collection("entries");
+    const projectsCollection = db.collection("projects");
+
+    // Listener for saving in DB
+    ipcMain.on("save-entry", async (event, arg) => {
+      event.returnValue = await entriesCollection.insertOne(arg);
+    });
+
+    // Listener for saving in DB
+    ipcMain.on("update-entry", async (event, arg) => {
+      event.returnValue = await entriesCollection.updateOne({ user: arg.user, _id: arg._id }, { $set: arg });
+    });
+
+    // Listener for getting all entries
+    ipcMain.on("get-entries", async (event, arg) => {
+      const startDate = getMonthStart();
+
+      const result = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
+
+      event.returnValue = result;
+    });
+  });
+
 
   globalShortcut.register('Ctrl+Option+Cmd+T', () => {
     app.show();
@@ -108,13 +140,19 @@ app.on("ready", () => {
 });
 
 app.on("window-all-closed", () => {
+  log.info("window-all-closed");
+
   if (process.platform !== "darwin") {
     client.close();
-    app.quit()
+    app.quit();
+    log.info("app.quit()");
   }
 });
 
-app.on('before-quit', () => willQuitApp = true);
+app.on('before-quit', () => {
+  log.info("willQuitApp = true;");
+  willQuitApp = true;
+});
 
 app.on("activate", () => {
   if (win === null) createWindow();
@@ -122,38 +160,3 @@ app.on("activate", () => {
 
   appOpened = true;
 });
-
-
-/** MongoDB Setup **/
-// Create a new MongoClient
-const client = new MongoClient(env.MONGO_URL, { useNewUrlParser: true });
-
-client.connect(function(err) {
-  if (err) return console.log("Error connection to DB", err);
-
-  const db = client.db("teamdeck");
-  const entriesCollection = db.collection("entries");
-  const projectsCollection = db.collection("projects");
-
-  // Listener for saving in DB
-  ipcMain.on("save-entry", async (event, arg) => {
-    event.returnValue = await entriesCollection.insertOne(arg);
-  });
-
-  // Listener for saving in DB
-  ipcMain.on("update-entry", async (event, arg) => {
-    event.returnValue = await entriesCollection.updateOne({ user: arg.user, _id: arg._id }, { $set: arg });
-  });
-
-  // Listener for getting all entries
-  ipcMain.on("get-entries", async (event, arg) => {
-    const startDate = getMonthStart();
-
-    event.returnValue = await entriesCollection.find({ user: arg.user, date: { $gte: formatDate(startDate) } }).toArray();
-  });
-});
-
-
-
-
-

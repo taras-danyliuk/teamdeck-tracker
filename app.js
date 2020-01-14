@@ -1,4 +1,5 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require("electron");
+const log = require("electron-log");
 
 const { getEntries, saveEntry, updateEntry, getDaysOff, getProjects, getUser, formatDate, formatTime, timeDiffInSeconds, secondsToTime, workingDaysBetweenDates, getMonthStartEndTotal } = require("./helpers");
 
@@ -10,15 +11,16 @@ require("./components/AppMenu");
 require("./components/TotalBreakdown");
 require("./components/ProgressBar");
 
-
 let user = "default@coaxsoft.com";
 let data = null;
 let daysOff = [];
 let availableProjects = [];
 
-document.addEventListener("DOMContentLoaded", function() {
+
+document.addEventListener("DOMContentLoaded", function () {
   // Get data from local .json file
   user = getUser();
+  console.log(user, "user")
   data = getEntries();
   daysOff = getDaysOff();
   availableProjects = getProjects();
@@ -32,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
   const vue = new Vue({
-    el: '#root',
+    el: "#root",
     data: {
       ...data,
       showNewEntryPopup: false,
@@ -46,10 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
       timeLeft: "00:00:00",
     },
     computed: {
-      todaysEntries: function() {
+      todaysEntries: function () {
         return this.entries[this.today] || [];
       },
-      projectsSummary: function() {
+      projectsSummary: function () {
         const entries = this.entries[this.today] || [];
         const result = {};
 
@@ -69,16 +71,16 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     },
     methods: {
-      totalTimeToday: function() {
+      totalTimeToday: function () {
         let total = 0;
 
         (this.entries[this.today] || []).forEach(entry => {
-            total += timeDiffInSeconds(entry.timeStart, entry.timeEnd);
+          total += timeDiffInSeconds(entry.timeStart, entry.timeEnd);
         });
 
         return secondsToTime(total);
       },
-      timeLeftToday: function() {
+      timeLeftToday: function () {
         let total = 0;
         Object.values(this.entries).forEach(value => {
           value.forEach(entry => total += timeDiffInSeconds(entry.timeStart, entry.timeEnd));
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         return secondsToTime(idealTime - total);
       },
-      startAndSave: function() {
+      startAndSave: function () {
         const today = formatDate(new Date());
 
         saveEntry(today, formatTime(new Date()));
@@ -101,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function() {
         vue.isTimerRunning = true;
         vue.showNewEntryPopup = true;
 
-        new Notification('Teamdeck notes', { body: 'Start timer' });
+        new Notification("Teamdeck notes", { body: "Start timer" });
       },
-      stopAndSave: function() {
+      stopAndSave: function () {
         const today = formatDate(new Date());
         const todayEntries = vue.entries[today];
         const targetEntry = todayEntries[todayEntries.length - 1];
@@ -114,9 +116,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         vue.isTimerRunning = false;
 
-        new Notification('Teamdeck notes', { body: 'Stop timer' });
+        new Notification("Teamdeck notes", { body: "Stop timer" });
       },
-      addEntryDetails: function(result = {}) {
+      addEntryDetails: function (result = {}) {
         const today = formatDate(new Date());
         const todayEntries = vue.entries[today];
         const targetEntry = todayEntries[todayEntries.length - 1];
@@ -130,26 +132,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         vue.showNewEntryPopup = false;
       },
-      save: function(targetEntryId, result) {
+      save: function (targetEntryId, result) {
         updateEntry(targetEntryId, result);
         const data = getEntries();
         vue.entries = data.entries;
         vue.isEdit = false;
       },
-      onOpenTarget: function(target) {
+      onOpenTarget: function (target) {
         if (target === "totalBreakdown") vue.showTotalBreakdown = true;
       },
-      closeTotalBreakdown: function() {
+      closeTotalBreakdown: function () {
         vue.showTotalBreakdown = false;
       },
-      toggleMenu: function() {
+      toggleMenu: function () {
         vue.showMenu = !vue.showMenu;
       },
-      onCloseMenu: function() {
+      onCloseMenu: function () {
         vue.showMenu = false;
       }
     },
-    mounted: function() {
+    mounted: function () {
       this.timeWorked = this.totalTimeToday();
       this.timeLeft = this.timeLeftToday();
 
@@ -158,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function() {
         this.timeLeft = this.timeLeftToday();
       }.bind(this), 1000);
     },
-    beforeDestroy: function(){
+    beforeDestroy: function () {
       clearInterval(this.interval);
     }
   });
@@ -170,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   // Local Shortcuts
-  Mousetrap.bind(["command+shift+e"], function() {
+  Mousetrap.bind(["command+shift+e"], function () {
     vue.isEdit = !vue.isEdit;
 
     return false;
