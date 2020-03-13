@@ -23,8 +23,11 @@ function formatTime(date) {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-function timeDiff(timeStart, timeEnd) {
-  if (!timeEnd) timeEnd = formatTime(new Date());
+function timeDiff(timeStart, timeEnd, shouldRound = false) {
+  if (!timeEnd) {
+    timeEnd = formatTime(new Date());
+    shouldRound = false;
+  }
 
   const timeStartArray = timeStart.split(":");
   const timeStartInSeconds = (+timeStartArray[0] * 3600) + (+timeStartArray[1] * 60) + +timeStartArray[2];
@@ -32,7 +35,14 @@ function timeDiff(timeStart, timeEnd) {
   const timeEndArray = timeEnd.split(":");
   const timeEndInSeconds = (+timeEndArray[0] * 3600) + (+timeEndArray[1] * 60) + +timeEndArray[2];
 
-  const diffInSeconds = timeEndInSeconds - timeStartInSeconds;
+  let diffInSeconds = timeEndInSeconds - timeStartInSeconds;
+  if (shouldRound) {
+    const slug = diffInSeconds % 300;
+    // If slug is lower than 2 minutes - lower to the bottom
+    if (slug <= 120) diffInSeconds = diffInSeconds - slug;
+    else diffInSeconds = diffInSeconds + (300 - slug);
+  }
+
   let hours = Math.floor(diffInSeconds / 3600);
   if (hours.toString().length === 1) hours = `0${hours}`;
   const minutes = `0${Math.floor((diffInSeconds - (hours * 3600)) / 60)}`.substr(-2);
@@ -41,8 +51,11 @@ function timeDiff(timeStart, timeEnd) {
   return `${hours}:${minutes}:${seconds}`
 }
 
-function timeDiffInSeconds(timeStart, timeEnd) {
-  if (!timeEnd) timeEnd = formatTime(new Date());
+function timeDiffInSeconds(timeStart, timeEnd, shouldRound = false) {
+  if (!timeEnd) {
+    timeEnd = formatTime(new Date());
+    shouldRound = false;
+  }
 
   const timeStartArray = timeStart.split(":");
   const timeStartInSeconds = (+timeStartArray[0] * 3600) + (+timeStartArray[1] * 60) + +timeStartArray[2];
@@ -50,7 +63,15 @@ function timeDiffInSeconds(timeStart, timeEnd) {
   const timeEndArray = timeEnd.split(":");
   const timeEndInSeconds = (+timeEndArray[0] * 3600) + (+timeEndArray[1] * 60) + +timeEndArray[2];
 
-  return timeEndInSeconds - timeStartInSeconds;
+  let diffInSeconds = timeEndInSeconds - timeStartInSeconds;
+  if (shouldRound) {
+    const slug = diffInSeconds % 300;
+    // If slug is lower than 2 minutes - lower to the bottom
+    if (slug <= 120) diffInSeconds = diffInSeconds - slug;
+    else diffInSeconds = diffInSeconds + (300 - slug);
+  }
+
+  return diffInSeconds;
 }
 
 function secondsToTime(seconds) {

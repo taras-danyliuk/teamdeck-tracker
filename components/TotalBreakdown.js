@@ -49,7 +49,7 @@ Vue.component("TotalBreakdown", {
     totalTimeToday: function() {
       let total = 0;
       Object.values(this.entries).forEach(value => {
-        value.forEach(entry => total += timeDiffInSeconds(entry.timeStart, entry.timeEnd));
+        value.forEach(entry => total += timeDiffInSeconds(entry.timeStart, entry.timeEnd, true));
       });
 
       return total;

@@ -34,7 +34,7 @@ Vue.component('DayBlock', {
             let total = 0;
 
             this.entries.forEach(entry => {
-                total += timeDiffInSeconds(entry.timeStart, entry.timeEnd);
+                total += timeDiffInSeconds(entry.timeStart, entry.timeEnd, true);
             });
 
             return secondsToTime(total)

@@ -42,7 +42,7 @@ Vue.component('EntryRow', {
     `,
     computed: {
         time: function() {
-            return timeDiff(this.data.timeStart, this.data.timeEnd)
+            return timeDiff(this.data.timeStart, this.data.timeEnd, true)
         }
     },
     methods: {

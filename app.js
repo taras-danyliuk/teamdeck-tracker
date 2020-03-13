@@ -20,7 +20,6 @@ let availableProjects = [];
 document.addEventListener("DOMContentLoaded", function () {
   // Get data from local .json file
   user = getUser();
-  console.log(user, "user")
   data = getEntries();
   daysOff = getDaysOff();
   availableProjects = getProjects();
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         entries.forEach(entry => {
           if (!(entry.project in result)) result[entry.project] = 0;
 
-          result[entry.project] += timeDiffInSeconds(entry.timeStart, entry.timeEnd)
+          result[entry.project] += timeDiffInSeconds(entry.timeStart, entry.timeEnd, true)
         });
 
         // Format time
