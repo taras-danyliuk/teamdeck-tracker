@@ -96,7 +96,7 @@ app.on("ready", () => {
     createWindow();
     appOpened = true;
 
-    const db = client.db("teamdeck");
+    const db = client.db("tracker");
     const entriesCollection = db.collection("entries");
     const projectsCollection = db.collection("projects");
 
